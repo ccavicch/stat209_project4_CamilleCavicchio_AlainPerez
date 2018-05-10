@@ -55,11 +55,12 @@ order by c.cand_office_state"
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 fecinfo<-db%>% dbGetQuery(fec) %>% collect()
+fecinfo
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 pop<-read.csv("statespopulation.csv")
-View(pop)
+head(pop)
 
 ```
 
