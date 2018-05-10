@@ -50,6 +50,12 @@ fecinfo<-db%>% dbGetQuery(fec) %>% collect()
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
+fecinfo <- fecinfo %>%rename(State = 'cand_office_state',
+                             ID='cand_id',
+                             name='cand_name',
+                             party='cand_party_affiliation',
+                             year= 'cand_election_yr',
+                             transactions='total_trans')
 fecinfo
 ```
 
