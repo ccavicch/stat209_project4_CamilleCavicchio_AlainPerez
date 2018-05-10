@@ -54,7 +54,8 @@ fecinfo<-db%>% dbGetQuery(fec) %>% collect()
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
-
+pop<-read.csv("statespopulation.csv")
+View(pop)
 ```
 
 
