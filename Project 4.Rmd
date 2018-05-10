@@ -19,15 +19,28 @@ db<-dbConnect_scidb("fec")
 dbListTables(db)
 #fec <- tbl(db, "fec")
 ```
+```{sql connection= db}
+SELECT *
+FROM contrib_com_to_cand
+LIMIT 0,100
+```
+
 
 ```{sql connection= db}
-SELECT c.cand_id, c.cand_name, c.cand_party_affiliation,c.cand_election_yr,c.cand_office_state, b.transaction_dt, 
-sum(transaction_amt) AS total_trans
+SELECT
+  c.cand_id,
+  c.cand_name,
+  c.cand_party_affiliation,
+  c.cand_election_yr,
+  c.cand_office_state,
+  b.transaction_dt, 
+  sum(transaction_amt) AS total_trans
 FROM candidates AS c 
 LEFT JOIN contrib_com_to_cand AS b ON c.cand_id = b.cand_id 
 WHERE c.cand_election_yr >= 2016 AND c.cand_id<=1 AND b.transaction_dt<=1
 GROUP BY c.cand_id
 ```
+
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 fec<-"SELECT c.cand_id, c.cand_name, c.cand_party_affiliation,c.cand_election_yr,c.cand_office_state, b.transaction_dt, 
 sum(transaction_amt) AS total_trans
