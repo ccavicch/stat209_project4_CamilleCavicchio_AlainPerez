@@ -9,6 +9,7 @@ library(dbplyr)
 library(mdsr)
 library(RMySQL)
 library(ggthemes)
+library(USAboundaries)
 library(sf)
 ```
 
@@ -76,10 +77,17 @@ fecinfo
 
 ```{r}
 fecinfo <- fecinfo %>%
-  left_join(pop, by = "State")
-
-fecinfo
+  left_join(pop, by = "State") %>%
+  #group_by(State)
+  summarize(meh=(sum(transactions)/sum(pop)))
+  
 ```
 
+```{r}
+us <- us_states("2000-12-30")
+plot(st_geometry(us))
+title("U.S. state boundaries present day")
+```
+```{r}
 
-
+```
