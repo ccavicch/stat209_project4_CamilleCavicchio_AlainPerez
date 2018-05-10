@@ -9,6 +9,7 @@ library(dbplyr)
 library(mdsr)
 library(RMySQL)
 library(ggthemes)
+library(sf)
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
@@ -53,7 +54,11 @@ fecinfo
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 pop<-read.csv("statespopulation.csv")
-head(pop)
+pop <- pop %>%
+  select(State, X2016) %>%
+  rename(pop = "X2016") %>%
+  mutate(pop = parse_number(pop))
+pop
 
 ```
 
@@ -63,7 +68,16 @@ fecinfo <- fecinfo %>%rename(State = 'cand_office_state',
                              name='cand_name',
                              party='cand_party_affiliation',
                              year= 'cand_election_yr',
-                             transactions='total_trans')
+                             transactions='total_trans') %>%
+  select(-transaction_dt)
+fecinfo
+```
+
+
+```{r}
+fecinfo <- fecinfo %>%
+  left_join(pop, by = "State")
+
 fecinfo
 ```
 
