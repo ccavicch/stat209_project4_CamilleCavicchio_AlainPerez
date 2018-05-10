@@ -37,21 +37,14 @@ order by c.cand_office_state
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
-fec<-"SELECT
-  c.cand_id,
-  c.cand_name,
-  c.cand_party_affiliation,
-  c.cand_election_yr,
-  c.cand_office_state,
-  b.transaction_dt, 
-  sum(transaction_amt) AS total_trans
+fec<-"SELECT c.cand_id, c.cand_name, c.cand_party_affiliation,c.cand_election_yr,c.cand_office_state, b.transaction_dt, 
+sum(transaction_amt) AS total_trans
 FROM candidates AS c 
 LEFT JOIN contrib_com_to_cand AS b ON c.cand_id = b.cand_id 
 WHERE c.cand_election_yr >= 2016 AND c.cand_id<=1 AND b.transaction_dt<=1
 GROUP BY c.cand_id
 order by c.cand_office_state"
 ```
-
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 fecinfo<-db%>% dbGetQuery(fec) %>% collect()
@@ -62,6 +55,16 @@ fecinfo
 pop<-read.csv("statespopulation.csv")
 head(pop)
 
+```
+
+```{r}
+fecinfo <- fecinfo %>%rename(State = 'cand_office_state',
+                             ID='cand_id',
+                             name='cand_name',
+                             party='cand_party_affiliation',
+                             year= 'cand_election_yr',
+                             transactions='total_trans')
+fecinfo
 ```
 
 
