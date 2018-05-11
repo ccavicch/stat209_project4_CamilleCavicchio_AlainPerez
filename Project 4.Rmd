@@ -9,6 +9,7 @@ library(dbplyr)
 library(mdsr)
 library(RMySQL)
 library(ggthemes)
+library(sf)
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
@@ -52,19 +53,45 @@ GROUP BY c.cand_id
 order by c.cand_office_state"
 ```
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4dcb902e5abfdc12e7a5e0eb521e2e5e4efccaec
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 fecinfo<-db%>% dbGetQuery(fec) %>% collect()
+fecinfo
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
+<<<<<<< HEAD
 
+=======
+pop<-read.csv("statespopulation.csv")
+pop <- pop %>%
+  select(State, X2016) %>%
+  rename(pop = "X2016") %>%
+  mutate(pop = parse_number(pop))
+pop
+
+```
+
+```{r}
+>>>>>>> 4dcb902e5abfdc12e7a5e0eb521e2e5e4efccaec
 fecinfo <- fecinfo %>%rename(State = 'cand_office_state',
                              ID='cand_id',
                              name='cand_name',
                              party='cand_party_affiliation',
                              year= 'cand_election_yr',
-                             transactions='total_trans')
+                             transactions='total_trans') %>%
+  select(-transaction_dt)
+fecinfo
+```
+
+
+```{r}
+fecinfo <- fecinfo %>%
+  left_join(pop, by = "State")
+
 fecinfo
 
 pop<-read.csv("statespopulation.csv")
