@@ -11,6 +11,8 @@ library(RMySQL)
 library(ggthemes)
 library(USAboundaries)
 library(sf)
+library(maps)
+library(mapproj)
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
@@ -70,17 +72,25 @@ fecinfo <- fecinfo %>%rename(State = 'cand_office_state',
                              party='cand_party_affiliation',
                              year= 'cand_election_yr',
                              transactions='total_trans') %>%
-  select(-transaction_dt)
+  select(-transaction_dt) %>%
+  left_join(pop, by = "State")
+
+
 fecinfo
 ```
 
 
 ```{r}
+summed_transactions <- aggregate(transactions ~ State, fecinfo, sum)
+
 fecinfo <- fecinfo %>%
-  left_join(pop, by = "State") %>%
-  #group_by(State)
-  summarize(meh=(sum(transactions)/sum(pop)))
-  
+  left_join(summed_transactions, by = "State") %>%
+  select(-transactions.x) %>%
+  rename(transactions = 'transactions.y') %>%
+  mutate(proportion = transactions / pop) %>%
+  arrange(desc(proportion))
+
+fecinfo
 ```
 
 ```{r}
@@ -88,6 +98,55 @@ us <- us_states("2000-12-30")
 plot(st_geometry(us))
 title("U.S. state boundaries present day")
 ```
+
+
+```{r}
+map('state', fill = TRUE, col = palette())
+```
+
+
+```{r}
+map('county', "nevada",  fill = TRUE, col = palette())
+```
+
+
+
+```{r}
+if(require(mapproj))  # mapproj is used for projection="polyconic"
+data(unemp)
+data(county.fips)
+# define color buckets
+colors = c("#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043")
+unemp$colorBuckets <- as.numeric(cut(unemp$unemp, c(0, 2, 4, 6, 8, 10, 100)))
+leg.txt <- c("<2%", "2-4%", "4-6%", "6-8%", "8-10%", ">10%")
+# align data with map definitions by (partial) matching state,county
+# names, which include multiple polygons for some counties
+cnty.fips <- county.fips$fips[match(map("county", plot=FALSE)$names,
+county.fips$polyname)]
+colorsmatched <- unemp$colorBuckets [match(cnty.fips, unemp$fips)]
+# draw map
+map("state", col = colors[colorsmatched], fill = TRUE, resolution = 0,
+lty = 0, projection = "polyconic")
+title("unemployment by county, 2009")
+legend("topright", leg.txt, horiz = TRUE, fill = colors)
+```
+
+
 ```{r}
 
+head(county.fips, "nevada")
+
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
