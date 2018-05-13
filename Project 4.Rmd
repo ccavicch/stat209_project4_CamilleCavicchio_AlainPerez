@@ -9,7 +9,7 @@ library(dbplyr)
 library(mdsr)
 library(RMySQL)
 library(ggthemes)
-library(USAboundaries)
+#library(USAboundaries)
 library(sf)
 library(maps)
 library(mapproj)
@@ -56,19 +56,13 @@ GROUP BY c.cand_id
 order by c.cand_office_state"
 ```
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 4dcb902e5abfdc12e7a5e0eb521e2e5e4efccaec
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
 fecinfo<-db%>% dbGetQuery(fec) %>% collect()
 fecinfo
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
-<<<<<<< HEAD
-
-=======
 pop<-read.csv("statespopulation.csv")
 pop <- pop %>%
   select(State, X2016) %>%
@@ -79,7 +73,7 @@ pop
 ```
 
 ```{r}
->>>>>>> 4dcb902e5abfdc12e7a5e0eb521e2e5e4efccaec
+
 fecinfo <- fecinfo %>%rename(State = 'cand_office_state',
                              ID='cand_id',
                              name='cand_name',
@@ -113,9 +107,9 @@ View(pop)
 ```
 
 ```{r}
-us <- us_states("2000-12-30")
-plot(st_geometry(us))
-title("U.S. state boundaries present day")
+#us <- us_states("2000-12-30")
+#plot(st_geometry(us))
+#title("U.S. state boundaries present day")
 ```
 
 
@@ -157,7 +151,11 @@ head(county.fips, "nevada")
 
 ```
 
+```{r}
+library(RColorBrewer)
+?map
 
+```
 
 
 
