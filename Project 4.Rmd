@@ -13,6 +13,7 @@ library(ggthemes)
 library(sf)
 library(maps)
 library(mapproj)
+library(ggplot2)
 ```
 
 ```{r, message=FALSE, echo=FALSE, warning=FALSE}
@@ -146,9 +147,17 @@ legend("topright", leg.txt, horiz = TRUE, fill = colors)
 
 
 ```{r}
+usa = st_as_sf(map('usa', plot = TRUE, fill = TRUE))
+laea = st_crs("+proj=laea +lat_0=30 +lon_0=-95") # Lambert equal area
+usa <- st_transform(usa, laea)
+g = st_graticule(usa)
+plot(st_geometry(g), axes = TRUE)
 
-head(county.fips, "nevada")
+```
 
+```{r}
+plot(usa, graticule = TRUE, key.pos = NULL, axes = TRUE)
+#thinkg about creating function for color that takes in a number from proportion and outputs a color (possibly using brewer pacakge)
 ```
 
 ```{r}
