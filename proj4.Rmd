@@ -112,7 +112,26 @@ fecinfo
 pop<-read.csv("poop.csv")
 
 ```
+```{r}
+#negfunction <-function(fecinfo,party, proportion) {fecinfo <- fecinfo%>%if(party == "DEM") {transactions <- transactions * (-1)}else{transactions <- transactions * (1)}}
+#fecinfo
 
+#if(c.cand_party_affiliation== “DEM”, total_trans*-1,0) AS negfunction
+
+
+negfunction <- function(data){
+ data %>%
+  if (party == "DEM") 
+    data<-data%>% mutate(transactions=(transactions*-1))
+  else
+    mutate(transactions=transactions*1)
+}
+negfunction(fecinfo)
+fecinfo
+```
+```{r}
+
+```
 
 ```{r}
 library(ggplot2)
